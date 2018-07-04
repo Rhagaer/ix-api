@@ -18,13 +18,18 @@ export class User extends Entity {
   })
   lastname: number;
 
-  goiuaeifohiaefnioseiobn;fnios;
 
   @property({
     type: 'string',
     required: true,
   })
   email: string;
+
+  @property({
+    type: 'boolean',
+  })
+  paid: boolean;
+  
 
   @property({
     type: 'string',
