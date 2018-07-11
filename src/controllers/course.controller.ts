@@ -92,7 +92,7 @@ export class CourseController {
 
    // make sure course and student exist or else this will fail
     @post('/review')
-    async makeReview(
+    async postReview(
         @requestBody() review: Review,
     ) {
         return this.reviewRepo.create(review);
@@ -111,7 +111,7 @@ export class CourseController {
 
     @get('/reviews/student')
     async getAllReviewsByStudentId(
-        @param.query.number('course_id') student_id: number
+        @param.query.number('student_id') student_id: number
     ) {
         return await this.reviewRepo.find({
             where: {
