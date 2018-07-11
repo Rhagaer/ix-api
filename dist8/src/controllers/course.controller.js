@@ -20,8 +20,34 @@ let CourseController = class CourseController {
     constructor(courseRepo) {
         this.courseRepo = courseRepo;
     }
+    // figure out many-to-many relationship
+    // @post('/review')
+    // async makeReview(
+    //     @requestBody() review: Review,
+    //     //@param.path.number('course_id') course_id: number
+    // ) {
+    //     if(!review.remark || !review.rating || !review.header) {
+    //         throw new HttpErrors.BadRequest('missing required fields')
+    //     }
+    //     return review;
+    // }
+    // @post('/course/review')
+    // async reviewCourse(
+    //     @requestBody() course: Course
+    // ) {
+    // }
     async findAllCourses() {
         return await this.courseRepo.find();
+    }
+    async searchCourses(subject, number) {
+        return await this.courseRepo.find({
+            where: {
+                and: [
+                    { subject: subject },
+                    { number: number }
+                ]
+            }
+        });
     }
     async findCourse(subject, number) {
         let courseExists = !!(await this.courseRepo.count({ subject }, { number }));
@@ -54,6 +80,14 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], CourseController.prototype, "findAllCourses", null);
+__decorate([
+    rest_1.get('/courses/search'),
+    __param(0, rest_1.param.path.string('subject')),
+    __param(1, rest_1.param.path.number('number')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Number]),
+    __metadata("design:returntype", Promise)
+], CourseController.prototype, "searchCourses", null);
 __decorate([
     rest_1.get('/courses/{subject}/{number}'),
     __param(0, rest_1.param.path.string('subject')),

@@ -24,6 +24,18 @@ __decorate([
 ], Review.prototype, "review_id", void 0);
 __decorate([
     repository_1.property({
+        type: "number"
+    }),
+    __metadata("design:type", Number)
+], Review.prototype, "course_id", void 0);
+__decorate([
+    repository_1.property({
+        type: "number"
+    }),
+    __metadata("design:type", Number)
+], Review.prototype, "student_id", void 0);
+__decorate([
+    repository_1.property({
         type: "string"
     }),
     __metadata("design:type", String)

@@ -75,6 +75,9 @@ let StudentController = class StudentController {
         };
     }
     async registerStudent(student) {
+        // let studentToCreate = new Student();
+        // studentToCreate.first_name = student.first_name;
+        // etc...
         // Check that email and password are both supplied
         if (!student.email || !student.password) {
             throw new rest_1.HttpErrors.Unauthorized('invalid credentials');

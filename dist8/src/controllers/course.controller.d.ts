@@ -4,6 +4,7 @@ export declare class CourseController {
     protected courseRepo: CourseRepository;
     constructor(courseRepo: CourseRepository);
     findAllCourses(): Promise<Course[]>;
+    searchCourses(subject: string, number?: number): Promise<Course[]>;
     findCourse(subject: string, number: number): Promise<Course | null>;
     addCourse(course: Course): Promise<Course>;
 }

@@ -24,7 +24,7 @@ export class StudentController {
         // The user is authenticated and we can process...
     }
 
-    @post('/login')
+    @post('/login_')
     async loginStudent(
         @requestBody() student: Student
     ) {
