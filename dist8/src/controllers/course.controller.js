@@ -16,26 +16,18 @@ const repository_1 = require("@loopback/repository");
 const course_repository_1 = require("../repositories/course.repository");
 const rest_1 = require("@loopback/rest");
 const course_model_1 = require("../models/course.model");
+const review_model_1 = require("../models/review.model");
+const review_repository_1 = require("../repositories/review.repository");
 let CourseController = class CourseController {
-    constructor(courseRepo) {
+    constructor(courseRepo, reviewRepo) {
         this.courseRepo = courseRepo;
+        this.reviewRepo = reviewRepo;
     }
-    // figure out many-to-many relationship
-    // @post('/review')
-    // async makeReview(
-    //     @requestBody() review: Review,
-    //     //@param.path.number('course_id') course_id: number
-    // ) {
-    //     if(!review.remark || !review.rating || !review.header) {
-    //         throw new HttpErrors.BadRequest('missing required fields')
-    //     }
-    //     return review;
-    // }
-    // @post('/course/review')
-    // async reviewCourse(
-    //     @requestBody() course: Course
-    // ) {
-    // }
+    async getCourseById(course_id) {
+        return await this.courseRepo.findById(course_id);
+    }
+    async reviewCourse(course) {
+    }
     async findAllCourses() {
         return await this.courseRepo.find();
     }
@@ -73,7 +65,46 @@ let CourseController = class CourseController {
         }
         return await this.courseRepo.create(course);
     }
+    // make sure course and student exist or else this will fail
+    async makeReview(review) {
+        return this.reviewRepo.create(review);
+    }
+    async getAllReviewsByCourseId(course_id) {
+        // let reviews: Review[] = await this.reviewRepo.find();
+        // let courseReviews: Review[];
+        // this.reviewRepo.find({
+        //     where: {
+        //         and: [
+        //             { review_id: 100 }
+        //         ]
+        //     }
+        // });
+        // reviews.forEach(review => {
+        //     if (review.course_id == course_id) {
+        //         courseReviews.push(review);
+        //     }
+        // });
+        return await this.reviewRepo.find({
+            where: {
+                course_id: course_id
+            }
+        });
+    }
 };
+__decorate([
+    rest_1.get('/course'),
+    __param(0, rest_1.param.path.number('course_id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], CourseController.prototype, "getCourseById", null);
+__decorate([
+    rest_1.post('/course/review'),
+    __param(0, rest_1.requestBody()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [course_model_1.Course]),
+    __metadata("design:returntype", Promise)
+], CourseController.prototype, "reviewCourse", null);
 __decorate([
     rest_1.get('/courses'),
     __metadata("design:type", Function),
@@ -103,9 +134,25 @@ __decorate([
     __metadata("design:paramtypes", [course_model_1.Course]),
     __metadata("design:returntype", Promise)
 ], CourseController.prototype, "addCourse", null);
+__decorate([
+    rest_1.post('/review'),
+    __param(0, rest_1.requestBody()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [review_model_1.Review]),
+    __metadata("design:returntype", Promise)
+], CourseController.prototype, "makeReview", null);
+__decorate([
+    rest_1.get('/reviews'),
+    __param(0, rest_1.param.query.number('course_id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], CourseController.prototype, "getAllReviewsByCourseId", null);
 CourseController = __decorate([
     __param(0, repository_1.repository(course_repository_1.CourseRepository)),
-    __metadata("design:paramtypes", [course_repository_1.CourseRepository])
+    __param(1, repository_1.repository(review_repository_1.ReviewRepository)),
+    __metadata("design:paramtypes", [course_repository_1.CourseRepository,
+        review_repository_1.ReviewRepository])
 ], CourseController);
 exports.CourseController = CourseController;
 //# sourceMappingURL=course.controller.js.map

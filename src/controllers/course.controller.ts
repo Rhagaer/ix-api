@@ -3,31 +3,27 @@ import { CourseRepository } from "../repositories/course.repository";
 import { post, requestBody, HttpErrors, get, param } from "@loopback/rest";
 import { Course } from "../models/course.model";
 import { Review } from "../models/review.model";
+import { ReviewRepository } from "../repositories/review.repository";
 
 export class CourseController {
     constructor(
-        @repository(CourseRepository) protected courseRepo: CourseRepository
+        @repository(CourseRepository) protected courseRepo: CourseRepository,
+        @repository(ReviewRepository) protected reviewRepo: ReviewRepository
     ) { }
 
-    // figure out many-to-many relationship
-    // @post('/review')
-    // async makeReview(
-    //     @requestBody() review: Review,
-    //     //@param.path.number('course_id') course_id: number
-    // ) {
-    //     if(!review.remark || !review.rating || !review.header) {
-    //         throw new HttpErrors.BadRequest('missing required fields')
-    //     }
+    @get('/course')
+    async getCourseById(
+        @param.path.number('course_id') course_id: number
+    ) {
+        return await this.courseRepo.findById(course_id);
+    }
 
-    //     return review;
-    // }
+    @post('/course/review')
+    async reviewCourse(
+        @requestBody() course: Course
+    ) {
 
-    // @post('/course/review')
-    // async reviewCourse(
-    //     @requestBody() course: Course
-    // ) {
-
-    // }
+    }
 
     @get('/courses')
     async findAllCourses(): Promise<Course[]> {
@@ -93,5 +89,37 @@ export class CourseController {
 
         return await this.courseRepo.create(course);
     }
+
+   // make sure course and student exist or else this will fail
+    @post('/review')
+    async makeReview(
+        @requestBody() review: Review,
+    ) {
+        return this.reviewRepo.create(review);
+    }
+
+    @get('/reviews/course')
+    async getAllReviewsByCourseId(
+        @param.query.number('course_id') course_id: number
+    ) {
+        return await this.reviewRepo.find({
+            where: {
+                course_id: course_id 
+            }
+        });
+    }
+
+    @get('/reviews/student')
+    async getAllReviewsByStudentId(
+        @param.query.number('course_id') student_id: number
+    ) {
+        return await this.reviewRepo.find({
+            where: {
+                student_id: student_id 
+            }
+        });
+    }
+
+
 
 }
