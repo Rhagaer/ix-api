@@ -18,22 +18,19 @@ export class CourseController {
         return await this.courseRepo.findById(course_id);
     }
 
-    @post('/course/review')
-    async reviewCourse(
-        @requestBody() course: Course
-    ) {
 
-    }
 
     @get('/courses')
     async findAllCourses(): Promise<Course[]> {
-        return await this.courseRepo.find();
+        let result = await this.courseRepo.find();
+        // console.dir(result);
+        return result;
     }
 
     @get('/courses/search')
     async searchCourses(
-        @param.path.string('subject') subject: string,
-        @param.path.number('number') number?: number
+        @param.query.string('subject') subject: string,
+        @param.query.number('number') number?: number
     ) {
         return await this.courseRepo.find({
             where: {
@@ -90,7 +87,7 @@ export class CourseController {
         return await this.courseRepo.create(course);
     }
 
-   // make sure course and student exist or else this will fail
+    // make sure course and student exist or else this will fail
     @post('/review')
     async postReview(
         @requestBody() review: Review,
@@ -104,7 +101,7 @@ export class CourseController {
     ) {
         return await this.reviewRepo.find({
             where: {
-                course_id: course_id 
+                course_id: course_id
             }
         });
     }
@@ -115,7 +112,7 @@ export class CourseController {
     ) {
         return await this.reviewRepo.find({
             where: {
-                student_id: student_id 
+                student_id: student_id
             }
         });
     }

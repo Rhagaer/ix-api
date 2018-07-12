@@ -26,10 +26,10 @@ let CourseController = class CourseController {
     async getCourseById(course_id) {
         return await this.courseRepo.findById(course_id);
     }
-    async reviewCourse(course) {
-    }
     async findAllCourses() {
-        return await this.courseRepo.find();
+        let result = await this.courseRepo.find();
+        console.dir(result);
+        return result;
     }
     async searchCourses(subject, number) {
         return await this.courseRepo.find({
@@ -66,27 +66,20 @@ let CourseController = class CourseController {
         return await this.courseRepo.create(course);
     }
     // make sure course and student exist or else this will fail
-    async makeReview(review) {
+    async postReview(review) {
         return this.reviewRepo.create(review);
     }
     async getAllReviewsByCourseId(course_id) {
-        // let reviews: Review[] = await this.reviewRepo.find();
-        // let courseReviews: Review[];
-        // this.reviewRepo.find({
-        //     where: {
-        //         and: [
-        //             { review_id: 100 }
-        //         ]
-        //     }
-        // });
-        // reviews.forEach(review => {
-        //     if (review.course_id == course_id) {
-        //         courseReviews.push(review);
-        //     }
-        // });
         return await this.reviewRepo.find({
             where: {
                 course_id: course_id
+            }
+        });
+    }
+    async getAllReviewsByStudentId(student_id) {
+        return await this.reviewRepo.find({
+            where: {
+                student_id: student_id
             }
         });
     }
@@ -99,13 +92,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], CourseController.prototype, "getCourseById", null);
 __decorate([
-    rest_1.post('/course/review'),
-    __param(0, rest_1.requestBody()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [course_model_1.Course]),
-    __metadata("design:returntype", Promise)
-], CourseController.prototype, "reviewCourse", null);
-__decorate([
     rest_1.get('/courses'),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
@@ -113,8 +99,8 @@ __decorate([
 ], CourseController.prototype, "findAllCourses", null);
 __decorate([
     rest_1.get('/courses/search'),
-    __param(0, rest_1.param.path.string('subject')),
-    __param(1, rest_1.param.path.number('number')),
+    __param(0, rest_1.param.query.string('subject')),
+    __param(1, rest_1.param.query.number('number')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Number]),
     __metadata("design:returntype", Promise)
@@ -140,14 +126,21 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [review_model_1.Review]),
     __metadata("design:returntype", Promise)
-], CourseController.prototype, "makeReview", null);
+], CourseController.prototype, "postReview", null);
 __decorate([
-    rest_1.get('/reviews'),
+    rest_1.get('/reviews/course'),
     __param(0, rest_1.param.query.number('course_id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], CourseController.prototype, "getAllReviewsByCourseId", null);
+__decorate([
+    rest_1.get('/reviews/student'),
+    __param(0, rest_1.param.query.number('student_id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], CourseController.prototype, "getAllReviewsByStudentId", null);
 CourseController = __decorate([
     __param(0, repository_1.repository(course_repository_1.CourseRepository)),
     __param(1, repository_1.repository(review_repository_1.ReviewRepository)),
